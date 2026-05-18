@@ -18,25 +18,25 @@ O fluxo principal divide-se em **descoberta** (feed na home), **autenticação**
 
 Feed público em grid. Exibe posts recentes e permite buscar por tag. Não exige autenticação.
 
-![Tela inicial — feed público de posts](./assets/home.png)
+![Tela inicial — feed público de posts](miniblog/assets/home.png)
 
 ### Login (`/login`)
 
 Autenticação por e-mail e senha. Após o acesso, o usuário é redirecionado à home. Inclui enlace para cadastro.
 
-![Tela de login](./assets/login.png)
+![Tela de login](miniblog/assets/login.png)
 
 ### Cadastro (`/register`)
 
 Criação de conta com nome, e-mail e senha. Habilita a publicação e a gestão de posts.
 
-![Tela de cadastro](./assets/register.png)
+![Tela de cadastro](miniblog/assets/register.png)
 
 ### Dashboard (`/dashboard`)
 
 Área restrita. Lista os posts do usuário logado, com edição inline e exclusão.
 
-![Painel do usuário — gestão dos próprios posts](./assets/dashboard.png)
+![Painel do usuário — gestão dos próprios posts](miniblog/assets/dashboard.png)
 
 ### Demais telas
 
