@@ -33,3 +33,13 @@
   width: 100%;
   margin-top: 0.5em;
 }
+
+@media (max-width: 600px) {
+  .login {
+    padding: 1.25rem 0.5rem;
+  }
+
+  .login form {
+    padding: 1.25rem;
+  }
+}

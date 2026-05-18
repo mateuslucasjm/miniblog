@@ -106,3 +106,27 @@
 .noposts a {
   padding: 0.65em 1.5em;
 }
+
+@media (max-width: 600px) {
+  .search_form {
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+  }
+
+  .search_form input {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg);
+  }
+
+  .search_form .btn,
+  .search_form .btn-outline {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .posts_grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
