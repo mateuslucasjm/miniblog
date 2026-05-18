@@ -1,57 +1,71 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { db } from "../firebase/config";
+
 import {
   collection,
-  query,
-  orderBy,
   onSnapshot,
+  orderBy,
+  query,
   where,
 } from "firebase/firestore";
 
+const sortByCreatedAtDesc = (docs) =>
+  [...docs].sort(
+    (a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0),
+  );
+
 export const useFetchDocuments = (docCollection, search = null, uid = null) => {
   const [documents, setDocuments] = useState(null);
-  const [error, sertError] = useState(null);
-  const [loading, setLoading] = useState(null);
-
-  // deal with memory leak
-  const [cancelled, setCancelled] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadData() {
-      if (cancelled) return;
+    setLoading(true);
 
-      setLoading(true);
+    const collectionRef = collection(db, docCollection);
 
-      const collectionRef = await collection(db, docCollection);
+    let q;
 
-      try {
-        let q;
-        q = await query(collectionRef, orderBy("createdAt", "desc"));
-
-        await onSnapshot(q, (querySnapshot) => {
-          setDocuments(
-            querySnapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            }))
-          );
-        });
-
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        sertError(error.message);
-
-        setLoading(false);
-      }
+    // buscar por tags (ordenação no cliente evita índice composto)
+    if (search) {
+      q = query(
+        collectionRef,
+        where("tagsArray", "array-contains", search),
+      );
     }
 
-    loadData();
-  }, [docCollection, search, uid, cancelled]);
+    // buscar posts do usuário (ordenação no cliente evita índice composto)
+    else if (uid) {
+      q = query(collectionRef, where("uid", "==", uid));
+    }
 
-  useEffect(()=> {
-    return () => setCancelled(true)
-  }, [])
+    // buscar todos os posts
+    else {
+      q = query(collectionRef, orderBy("createdAt", "desc"));
+    }
 
-  return {documents, loading, error}
+    const unsubscribe = onSnapshot(
+      q,
+      (querySnapshot) => {
+        const docs = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setDocuments(uid || search ? sortByCreatedAtDesc(docs) : docs);
+
+        setLoading(false);
+      },
+      (error) => {
+        console.log(error);
+        setError(error.message);
+        setLoading(false);
+      },
+    );
+
+    // cleanup listener
+    return () => unsubscribe();
+  }, [docCollection, search, uid]);
+
+  return { documents, loading, error };
 };

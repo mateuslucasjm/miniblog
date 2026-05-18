@@ -1,19 +1,30 @@
 import styles from "./Home.module.css";
 
-// hooks
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useFetchDocuments } from "../../hooks/useFetchDocument";
 
-//components
 import PostDetails from "../../components/PostDetails";
+import Loading from "../../components/Loading/Loading";
 
 const Home = () => {
   const [query, setQuery] = useState("");
-  const { documents: posts, loading } = useFetchDocuments("posts");
+  const [search, setSearch] = useState(null);
+
+  const { documents: posts, loading, error } = useFetchDocuments(
+    "posts",
+    search,
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const term = query.trim().toLowerCase();
+    setSearch(term || null);
+  };
+
+  const handleClear = () => {
+    setQuery("");
+    setSearch(null);
   };
 
   return (
@@ -22,27 +33,58 @@ const Home = () => {
       <form onSubmit={handleSubmit} className={styles.search_form}>
         <input
           type="text"
-          placeholder="Ou busque por tags..."
+          placeholder="Busque por tag (ex: react)..."
+          value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button className="btn btn-dark">Pesquisar</button>
+        <button type="submit" className="btn btn-dark">
+          Pesquisar
+        </button>
+        {search && (
+          <button
+            type="button"
+            className="btn btn-outline"
+            onClick={handleClear}
+          >
+            Limpar
+          </button>
+        )}
       </form>
-      <div>
-        <h1>
-          {loading && <p>Carregando...</p> }
-          {posts && posts.map((post) => (
-            <PostDetails key={post.id} post={post}/>
-          ))}
-        </h1>
-        {posts && posts.length === 0 && (
+
+      {search && (
+        <p className={styles.search_info}>
+          Resultados para a tag: <strong>#{search}</strong>
+        </p>
+      )}
+
+      {error && <p className="error">{error}</p>}
+
+      <section className={styles.posts_section}>
+        {loading && <Loading text="Carregando posts..." />}
+        {!loading && posts && posts.length > 0 && (
+          <ul className={styles.posts_grid}>
+            {posts.map((post) => (
+              <li key={post.id}>
+                <PostDetails post={post} />
+              </li>
+            ))}
+          </ul>
+        )}
+        {!loading && posts && posts.length === 0 && (
           <div className={styles.noposts}>
-            <p>Não foram encontrados posts</p>
-            <Link to="/posts/create" className="btn">
-              Criar primeiro post
-            </Link>
+            <p>
+              {search
+                ? `Nenhum post encontrado com a tag "${search}"`
+                : "Não foram encontrados posts"}
+            </p>
+            {!search && (
+              <Link to="/posts/create" className="btn">
+                Criar primeiro post
+              </Link>
+            )}
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 };

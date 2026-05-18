@@ -1,19 +1,18 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import {getFirestore} from 'firebase/firestore'
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDUMsTA_MXeJ_wqT_peYgaBTF4iNeiYfVQ",
-  authDomain: "miniblog-d6e92.firebaseapp.com",
-  projectId: "miniblog-d6e92",
-  storageBucket: "miniblog-d6e92.firebasestorage.app",
-  messagingSenderId: "161491929957",
-  appId: "1:161491929957:web:3298a97b20538e8eaf2f8c"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app)
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-const auth = getAuth(app)
-
-export {db, auth}
+export { db, auth };

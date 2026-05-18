@@ -1,0 +1,153 @@
+.dashboard {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.header h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 0.35em;
+}
+
+.header p {
+  color: var(--color-text-muted);
+  margin-bottom: 1.25em;
+}
+
+.status {
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--color-border);
+}
+
+.empty p {
+  color: var(--color-text-muted);
+  margin-bottom: 1.5em;
+}
+
+.posts_list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.post_item {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.post_preview {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 1.25rem;
+  padding: 1.25rem;
+}
+
+.post_preview img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.post_info h2 {
+  font-size: 1.15rem;
+  margin: 0 0 0.5em;
+}
+
+.post_body {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin: 0 0 0.75em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+}
+
+.tags span {
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+  padding: 0.2em 0.65em;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0 1.25rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1rem;
+  margin-top: 0;
+}
+
+.edit_form {
+  max-width: 100%;
+  padding: 1.5rem;
+  text-align: left;
+}
+
+.edit_form h2 {
+  font-size: 1.15rem;
+  margin: 0 0 1.25em;
+  text-align: center;
+}
+
+.form_actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.5em;
+}
+
+.form_actions .btn {
+  flex: 1;
+  min-width: 120px;
+}
+
+@media (max-width: 600px) {
+  .post_preview {
+    grid-template-columns: 1fr;
+  }
+
+  .post_preview img {
+    height: 160px;
+  }
+
+  .actions,
+  .form_actions {
+    flex-direction: column;
+  }
+
+  .actions .btn,
+  .form_actions .btn {
+    width: 100%;
+  }
+}

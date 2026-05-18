@@ -4,43 +4,41 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthValue } from "../../context/AuthContext";
 import { useInsertDocument } from "../../hooks/useInsertDocument";
+import { parseTags } from "../../utils/tags";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
   const [body, setBody] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState("");
   const [formError, setFormError] = useState("");
 
   const { user } = useAuthValue();
 
   const { insertDocument, response } = useInsertDocument("posts");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setFormError("");
 
-    // validate image URL
     try {
       new URL(image);
-    } catch (error) {
+    } catch {
       setFormError("A imagem precisa ser uma URL.");
+      return;
     }
 
-    // criar o array de tags
-    const tagsArray = tags.split('.').map((tag)=> tag.trim().toLowerCase())
+    const tagsArray = parseTags(tags);
 
-    // checar todos os valores
-    if(!title || !image || !tags || !body) {
-      setFormError('Por favor, preencha todos os campos!')
+    if (!title || !image || !body || tagsArray.length === 0) {
+      setFormError("Por favor, preencha todos os campos!");
+      return;
     }
 
-    if (formError) return;
-
-    insertDocument({
+    await insertDocument({
       title,
       image,
       body,
@@ -49,9 +47,7 @@ const CreatePost = () => {
       createdBy: user.displayName,
     });
 
-    // redirect home page
-    navigate('/')
-
+    navigate("/");
   };
 
   return (
@@ -89,7 +85,7 @@ const CreatePost = () => {
             placeholder="Insira o conteúdo do post.."
             onChange={(e) => setBody(e.target.value)}
             value={body}
-          ></textarea>
+          />
         </label>
         <label>
           <span>Tags:</span>
@@ -97,7 +93,7 @@ const CreatePost = () => {
             type="text"
             name="tags"
             required
-            placeholder="Insira as tags separadas por vírgula..."
+            placeholder="Ex: react, firebase, blog"
             onChange={(e) => setTags(e.target.value)}
             value={tags}
           />
